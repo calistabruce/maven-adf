@@ -31,4 +31,4 @@ This is a collection of related notes to the goal of using Maven and ADF.
   IDE Integration
    * Netbeans has native integration to read the pom.xml files directly and use them
    * Use m2eclipse so that Eclipse has native integration to read the pom.xml files directly
-   * JDeveloper use 'mvn jdev:jdev' http://myfaces.apache.org/trinidad/plugins/maven-jdev-plugin/project-info.html (The brand new maven2 ingegration for JDeveloper doesn't quite understand multi-module maven projects yet, so still using the trinidad plugin)
+   * JDeveloper use 'mvn jdev:jdev' http://myfaces.apache.org/trinidad/plugins/maven-jdev-plugin/project-info.html (The brand new maven2 integration for JDeveloper doesn't quite understand multi-module maven projects yet, so still using the trinidad plugin)
