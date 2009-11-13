@@ -18,7 +18,7 @@ public class JarLoader {
 	// These need to become command line arguments or properties.  For now, hard coded.
 	private static String JDEV_VERSION = "11.1.1.2.0";
 	private static String JDEV_GROUP_BASE = "com.oracle.jdeveloper";
-	private static String JDEV_HOME = "/home/nelson24/apps/jdev-11.1.1.2.0/jdeveloper";
+	private static String JDEV_HOME = "/opt/jdev/jdev-11.1.1.2.0/jdeveloper";
 	private static String POM_PATH = "target/scripts/poms";
 	private static String SCRIPT_PATH = "target/scripts";
 
@@ -244,24 +244,28 @@ public class JarLoader {
 		ArrayList<JarLibrary> libs = new ArrayList<JarLibrary>();
 
 		File searchRoot = new File(path);
-		File[] allFiles = searchRoot.listFiles();
-		for (int i = 0; i < allFiles.length; i++) {
-			File file = allFiles[i];
-			if (file.getName().endsWith("jar")) {
-				System.out.println("Processing: " + file.getName());
-				JarFile jarfile;
-				try {
-					jarfile = new JarFile(file);
-					Digester digester = new Digester();
-					addRules(digester);
-					digester.push(libs);
-					getJDevExtensionXml(jarfile, digester);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Not really a jar: " + file.getName());
-					System.out.println(e.getMessage());
-				}
-			}
+		if (!searchRoot.exists()) {
+		  System.err.println("Directory does not exist: " + path);
+		} else {
+    		File[] allFiles = searchRoot.listFiles();
+    		for (int i = 0; i < allFiles.length; i++) {
+    			File file = allFiles[i];
+    			if (file.getName().endsWith("jar")) {
+    				System.out.println("Processing: " + file.getName());
+    				JarFile jarfile;
+    				try {
+    					jarfile = new JarFile(file);
+    					Digester digester = new Digester();
+    					addRules(digester);
+    					digester.push(libs);
+    					getJDevExtensionXml(jarfile, digester);
+    				} catch (IOException e) {
+    					// TODO Auto-generated catch block
+    					System.out.println("Not really a jar: " + file.getName());
+    					System.out.println(e.getMessage());
+    				}
+    			}
+    		}
 		}
 		return libs;
 	}
