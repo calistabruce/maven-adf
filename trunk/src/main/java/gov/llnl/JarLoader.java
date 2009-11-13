@@ -17,10 +17,7 @@ public class JarLoader {
 	
 	// These need to become command line arguments or properties.  For now, hard coded.
 	private static String JDEV_VERSION = "11.1.1.2.0";
-	private static String JDEV_GROUP_BASE = "com.oracle.jdeveloper";
-	private static String JDEV_HOME = "/opt/jdev/jdev-11.1.1.2.0/jdeveloper";
-	private static String POM_PATH = "target/scripts/poms";
-	private static String SCRIPT_PATH = "target/scripts";
+    private static String JDEV_HOME = "/opt/jdev/jdev-11.1.1.2.0/jdeveloper";
 
 	// For Maven 2
 	private static String REPO_URL = "https://nexus/content/repositories/thirdparty";
@@ -31,6 +28,12 @@ public class JarLoader {
 	
 	// Copy command for maven 1 - default is scp
 	private static final String COPY_CMD="scp";
+
+    // Customize these as you like.  The following values work just fine
+    private static String JDEV_GROUP_BASE = "com.oracle.jdeveloper";
+    private static String POM_PATH = "target/scripts/poms";
+    private static String SCRIPT_PATH = "target/scripts";
+
 	
 	public static void main(String[] args) {
 		JarLoader me = new JarLoader();
