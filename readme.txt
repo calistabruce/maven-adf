@@ -50,7 +50,7 @@ weird characters (like space, /, $, etc) to _ characters in the library poms gen
         <inherited>true</inherited>
         <configuration>
           <libraries>
-            <library>JSP 1.2</library>
+            <library>JSF 1.2</library>
             <library>ADF Faces Runtime 11</library>
           </libraries>
         </configuration>
