@@ -63,11 +63,13 @@ weird characters (like space, /, $, etc) to _ characters in the library poms gen
       <artifactId>ADF_Faces_Runtime_11</artifactId>
       <version>${jdev.release}</version>
       <type>pom</type>
+      <scope>provided</scope>
      </dependency>
      <dependency>
       <groupId>com.oracle.jdeveloper.library</groupId>
       <artifactId>JSF_1.2</artifactId>
       <version>${jdev.release}</version>
       <type>pom</type>
+      <scope>provided</scope>
      </dependency>
     </dependencies>
