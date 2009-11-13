@@ -1,0 +1,18 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.oracle.jdeveloper.library</groupId>
+  <artifactId>ADF_Faces_Runtime</artifactId>
+  <version>10.1.3.4.0</version>
+  <dependencies>
+    <dependency>
+      <groupId>com.oracle.jdeveloper.jars.jlib</groupId>
+      <artifactId>adf-faces-impl</artifactId>
+      <version>10.1.3.4.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.oracle.jdeveloper.jars.jlib</groupId>
+      <artifactId>adf-faces-api</artifactId>
+      <version>10.1.3.4.0</version>
+    </dependency>
+  </dependencies>
+</project>

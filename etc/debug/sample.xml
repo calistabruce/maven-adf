@@ -1,0 +1,1035 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<extension xmlns="http://jcp.org/jsr/198/extension-manifest"
+           id="oracle.BC4J"
+           version="10.1.3.36.73"
+           esdk-version="1.0">
+<!-- Built using label: JDEVADF_10.1.3_NT_060616.1900.3726  -->
+   <name>ADF Model</name>
+   <owner>Oracle Corporation</owner>
+   <dependencies>
+      <import>oracle.bm</import>
+      <import>oracle.jdeveloper.jgoodies</import>
+      <import>oracle.j2ee</import>
+   </dependencies>
+   <classpaths>
+      <classpath>../../BC4J/lib/adfbinding.jar</classpath>
+      <classpath>../../BC4J/lib/adfdt_common.jar</classpath>
+      <classpath>../../BC4J/jlib/adfmant.jar</classpath>
+      <classpath>../../BC4J/lib/adfm.jar</classpath>
+      <classpath>../../BC4J/jlib/adfui.jar</classpath>
+      <classpath>../../BC4J/jlib/adfmtl.jar</classpath>
+      <classpath>../../BC4J/lib/bc4jmt.jar</classpath>
+      <classpath>../../BC4J/lib/bc4jmtejb.jar</classpath>
+      <classpath>../../BC4J/lib/bc4jimdomains.jar</classpath>
+      <classpath>../../BC4J/jlib/bc4jmtvb.jar</classpath>
+      <classpath>../../BC4J/jlib/bc4jtester.jar</classpath>
+      <classpath>../../BC4J/lib/bc4jct.jar</classpath>
+      <classpath>../../BC4J/lib/bc4jdomorcl.jar</classpath>
+      <classpath>../../BC4J/lib/collections.jar</classpath>
+      <classpath>../../BC4J/jlib/bc4jui.jar</classpath>
+      <classpath>../../BC4J/jlib/adfmmeta.jar</classpath>
+      <classpath>../../ord/jlib/ordhttp.jar</classpath>
+      <classpath>../../ord/jlib/ordim.jar</classpath>
+      <classpath>../../sqlj/lib/runtime12.jar</classpath>
+      <classpath>../../jlib/LW_PfjBean.jar</classpath>
+      <classpath>../lib/velocity-dep-1.3.jar</classpath>
+      <classpath>../../jlib/ojmisc.jar</classpath>
+      <classpath>../lib/modtools.jar</classpath>
+      <classpath>../lib/modunittests.jar</classpath>
+      <classpath>../lib/modelers.jar</classpath>
+      <classpath>../lib/jdukshare.jar</classpath>
+      <classpath>../../j2ee/home/jazn.jar</classpath>
+      <classpath>../../j2ee/home/jazncore.jar</classpath>
+      <classpath>../../BC4J/lib/adfshare.jar</classpath>
+      <classpath>../../mds/lib/mdsrt.jar</classpath>
+   </classpaths>
+   <hooks>
+      <jdeveloper-hook xmlns="http://xmlns.oracle.com/jdeveloper/1013/extension">
+         <user-data>
+            <path>/templates/</path>
+            <path>/TemplateWizard/</path>
+            <path>/adfjclient_binding.xml</path>
+            <path>/formatinfo.xml</path>
+            <path>/XSQLConfig.xml</path>
+            <path>/jbo.properties</path>
+         </user-data>
+         <addins>
+            <addin headless="true">oracle.jbo.dt.jdevx.ui.JdxJboAddin</addin>
+            <addin>oracle.jbo.dt.jsp.impl.TagSupportAddin</addin>
+            <addin>oracle.jbo.dt.jclient.datadef.DataDefWizard</addin>
+            <addin>oracle.jbo.dt.ui.wizards.wiztemplate.dt.WizardDefNodeRecognizer</addin>
+            <addin>oracle.jbo.dt.jclient.jnlp.JNLPAddin</addin>
+            <addin>oracle.jbo.dt.jsp.impl.WebSupportAddin</addin>
+            <addin>oracle.jbo.dt.ui.jui.preferences.PreferencesAddin</addin>
+            <addin>oracle.adf.dt.dbpanel.DataBindingAddin</addin>
+            <addin>oracle.jbo.dt.jclient.JClientAddin</addin>
+            <addin>oracle.jbo.dt.jdevx.ui.config.XcfgExplorerAddin</addin>
+            <addin>oracle.adf.dt.addins.AdfDtAddin</addin>
+            <addin>oracle.jbo.dt.modeler.addin.BC4JModelAddin</addin>
+            <addin>oracle.jbo.dt.modeler.diagram.BC4JModelAddin</addin>
+            <addin>oracle.jbo.dt.ui.wizards.xsqlelem.XsqlElementWizardAddin</addin>
+         </addins>
+         <gallery>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxJprAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_BC4J_PROJECT</description>
+               <category>General</category>
+               <folder>Projects</folder>
+               <technologyKey>General</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxJprAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_BC4J_PROJECT</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxPKEntityAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_BC4J_FROM_TABLES</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+               <unsorted>true</unsorted>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxPKDataModelAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_DATAMODEL</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxEOAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_EO</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxVOAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_VO</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxVLAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_VL</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxASAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_AS</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxAMAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_AM</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.JdxDOAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.Res</resClass>
+               <description>GALLERY_DO</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jdevx.ui.deploy.JxdDeployAddin</name>
+               <resClass>oracle.jbo.dt.jdevx.ui.deploy.Res</resClass>
+               <description>DEPLOYWIZARD_NAME</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.ui.wizards.xsqlpage.NewXSQL</name>
+               <resClass>oracle.jbo.dt.common.gallery.ResPanel</resClass>
+               <description>XSQL_PAGE</description>
+               <category>General</category>
+               <folder>XML</folder>
+               <technologyKey>XSQL</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jclient.dacform.DACFormWizard</name>
+               <resClass>oracle.jbo.dt.common.gallery.ResPanel</resClass>
+               <description>JCLIENT_FORM</description>
+               <category>Client Tier</category>
+               <folder>ADF Swing</folder>
+               <technologyKey>JClient</technologyKey>
+               <technologyKey>Swing/AWT</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jclient.dacpanel.DACPanelWizard</name>
+               <resClass>oracle.jbo.dt.common.gallery.ResPanel</resClass>
+               <description>JCLIENT_PANEL</description>
+               <category>Client Tier</category>
+               <folder>ADF Swing</folder>
+               <technologyKey>JClient</technologyKey>
+               <technologyKey>Swing/AWT</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jclient.dacempty.DACPanelWizard</name>
+               <resClass>oracle.jbo.dt.common.gallery.ResPanel</resClass>
+               <description>JCLIENT_EMPTY_PANEL</description>
+               <category>Client Tier</category>
+               <folder>ADF Swing</folder>
+               <technologyKey>JClient</technologyKey>
+               <technologyKey>Swing/AWT</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jclient.dacempty.DACFrameWizard</name>
+               <resClass>oracle.jbo.dt.common.gallery.ResPanel</resClass>
+               <description>JCLIENT_EMPTY_FORM</description>
+               <category>Client Tier</category>
+               <folder>ADF Swing</folder>
+               <technologyKey>JClient</technologyKey>
+               <technologyKey>Swing/AWT</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jclient.jnlp.JNLPWizardAddin</name>
+               <resClass>oracle.jbo.dt.common.gallery.ResPanel</resClass>
+               <description>JCLIENT_JNLP</description>
+               <category>Client Tier</category>
+               <folder>ADF Swing</folder>
+               <technologyKey>JClient</technologyKey>
+               <technologyKey>Swing/AWT</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.jclient.jnlp.JNLPWizardAddin</name>
+               <resClass>oracle.jbo.dt.jclient.jnlp.JNLPWizardAddin</resClass>
+               <description>GENERAL_JNLP</description>
+               <category>General</category>
+               <folder>Deployment Descriptors</folder>
+               <technologyKey>JClient</technologyKey>
+               <technologyKey>Swing/AWT</technologyKey>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.modeler.diagram.BC4JModelWizard</name>
+               <description>Business Components Diagram</description>
+               <category>Business Tier</category>
+               <folder>ADF Business Components</folder>
+               <technologyKey>ADFbc</technologyKey>
+               <unsorted>true</unsorted>
+            </item>
+            <item>
+               <name>oracle.jbo.dt.modeler.diagram.BC4JModelWizard</name>
+               <description>Business Components Diagram</description>
+               <category>General</category>
+               <folder>Diagrams</folder>
+               <technologyKey>ADFbc</technologyKey>
+            </item>
+         </gallery>
+         <palette>
+            <!-- The Business Components Modeler Palette -->
+            <page>
+               <name>Business Components</name>
+               <showForTypes>
+                  oxd_ana;oxd_bc4j;oxd_db;oxd_ejb;oxd_java;oxd_usc;oxd_ws;oxd_otd;oxd_seq
+               </showForTypes>
+               <technologyScope>ADFbc</technologyScope>
+               <type>oxd_otd</type>
+               <view>list</view>
+               <canRemove>false</canRemove>
+               <canShow>true</canShow>
+               <draggable>true</draggable>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/entityObject.png</icon>
+                  <info>EntityObject</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Entity Object&lt;br>Represents a database table and implements business rules&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Entity Object</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/domain.png</icon>
+                  <info>BC4JDomain</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Domain&lt;br>Represents a complex datatype or implements type-level validation&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Domain</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/bc4jassociation.png</icon>
+                  <info>BC4JAssociation</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Association&lt;br>Defines a relationship between two entity objects&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Association</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/bc4jassociation.png</icon>
+                  <info>BC4JAssociation$RAss1MD</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Unidirectional Association&lt;br>Defines a unidirectional relationship between two entity objects&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Unidirectional Association</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/viewObject.png</icon>
+                  <info>ViewObject</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>View Object&lt;br>Retrieves data from a datasource and exposes to clients&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>View Object</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/entityObjectInstance.png</icon>
+                  <info>EntityObjectInstance</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Entity Object Usage&lt;br>Defines a reference to an entity object within a view object&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Entity Object Usage</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/viewlink.png</icon>
+                  <info>ViewLink</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>View Link&lt;br>Defines a relationship between two view objects&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>View Link</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/applicationModule.png</icon>
+                  <info>ApplicationModule</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Application Module&lt;br>Organizes view objects, handles transactions and provides business service methods&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Application Module</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/viewObjectInstance.png</icon>
+                  <info>ViewObjectInstance</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>View Object Instance&lt;br>Defines an instance of a view object within an application module's data model&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>View Object Instance</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/viewLinkInstance.png</icon>
+                  <info>ViewLinkInstance</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>View Link Instance&lt;br>Defines an instance of a view link within an application module, linking two view objects instance&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>View Link Instance</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jbo/dt/ui/main/images/applicationModuleInstance.png</icon>
+                  <info>ApplicationModuleInstance</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Application Module Instance&lt;br>Defines an instance of an application module within another's data model&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Application Module Instance</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/bm/uml/images/generalization.png</icon>
+                  <info>RBC4JGeneralization</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Extends&lt;br>Defines the supertype of a business component of the same type&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Extends</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/bm/uml/images/dependency.png</icon>
+                  <info>Dependency</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Dependency&lt;br>Represents where one diagram element depends on another&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Dependency</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/bm/diagrammer/images/annotation.png</icon>
+                  <info>DiagramNote</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Note&lt;br>Annotates the diagram&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Note</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/jdeveloper/palette/images/link.png</icon>
+                  <info>URLLink</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Link&lt;br>Links to another diagram or URL&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Link</shortLabel>
+                  <type>Diagram</type>
+               </item>
+               <item>
+                  <canRemove>false</canRemove>
+                  <icon>/oracle/bm/uml/images/constraintUsage.png</icon>
+                  <info>RAttach</info>
+                  <isPersistent>true</isPersistent>
+                  <longLabel>&lt;html>&lt;body>&lt;table border="0">&lt;tr>&lt;td>Attachment&lt;br>Attaches annotations to other diagram elements&lt;/td>&lt;/tr>&lt;/table>&lt;/body>&lt;/html></longLabel>
+                  <shortLabel>Attachment</shortLabel>
+                  <type>Diagram</type>
+               </item>
+            </page>
+            <page>
+               <name>ADF Swing Controls</name>
+               <showForTypes>java</showForTypes>
+               <technologyScope>Java;JavaBeans;Swing/AWT</technologyScope>
+               <type>java</type>
+               <view>list</view>
+               <canRemove>false</canRemove>
+               <canShow>true</canShow>
+               <draggable>true</draggable>
+                <item>
+                   <canRemove>false</canRemove>
+                                   <icon>/oracle/adf/dt/resource/graph.png</icon>
+                   <info>oracle.dss.graph.Graph</info>
+                   <isPersistent>true</isPersistent>
+                       <longLabel>oracle.dss.graph.Graph</longLabel>
+                                   <Library>oracle.dss.graph.Graph;oracle.dss.graph.Graph;oracle.dss.util.DataSource></Library>
+                   <shortLabel>Graph</shortLabel>
+                   <type>JavaBean</type>
+                </item>
+                <item>
+                   <canRemove>false</canRemove>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/images/comboBox.png</icon>
+                   <info>oracle.jbo.uicli.controls.JUArrayComboBox</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>oracle.jbo.uicli.controls.JUArrayComboBox</longLabel>
+                   <shortLabel>JUArrayComboBox</shortLabel>
+                                   <Library>ADF Swing Runtime</Library>
+                   <type>JavaBean</type>
+                </item>
+                <item>
+                   <canRemove>false</canRemove>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/images/image.png</icon>
+                   <info>oracle.jbo.uicli.controls.JUImageControl</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>oracle.jbo.uicli.controls.JUImageControl</longLabel>
+                   <shortLabel>JUImageControl</shortLabel>
+                                   <Library>ADF Swing Runtime</Library>
+                   <type>JavaBean</type>
+                </item>
+                <item>
+                   <canRemove>false</canRemove>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/images/text.png</icon>
+                   <info>oracle.jbo.uicli.controls.JULabel</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>oracle.jbo.uicli.controls.JULabel</longLabel>
+                   <shortLabel>JULabel</shortLabel>
+                   <type>JavaBean</type>
+                </item>
+                <item>
+                   <canRemove>false</canRemove>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/images/navigationBar.png</icon>
+                   <info>oracle.jbo.uicli.controls.JUNavigationBar</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>oracle.jbo.uicli.controls.JUNavigationBar</longLabel>
+                   <shortLabel>JUNavigationBar</shortLabel>
+                                   <Library>ADF Swing Runtime</Library>
+                   <type>JavaBean</type>
+                </item>
+                <item>
+                   <canRemove>false</canRemove>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/images/radiogroup.png</icon>
+                   <info>oracle.jbo.uicli.controls.JURadioButtonGroupPanel</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>oracle.jbo.uicli.controls.JURadioButtonGroupPanel</longLabel>
+                   <shortLabel>JURadioButtonGroupPanel</shortLabel>
+                                   <Library>ADF Swing Runtime</Library>
+                   <type>JavaBean</type>
+                </item>
+                <item>
+                   <canRemove>false</canRemove>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/images/tableRow.png</icon>
+                   <info>oracle.jbo.uicli.controls.JUStatusBar</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>oracle.jbo.uicli.controls.JUStatusBar</longLabel>
+                                   <Library>ADF Swing Runtime</Library>
+                   <shortLabel>JUStatusBar</shortLabel>
+                   <type>JavaBean</type>
+                </item>
+             </page>
+             <page>
+                <name>XSQL</name>
+                <showForTypes>xsql</showForTypes>
+                <technologyScope>XSQL</technologyScope>
+                <type>xsql</type>
+                <view>list</view>
+                <canRemove>true</canRemove>
+                <canShow>true</canShow>
+                <draggable>true</draggable>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/sqlFile.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>DML</longLabel>
+                   <shortLabel>DML</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/html.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Include OWA</longLabel>
+                   <shortLabel>Include OWA</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/parameter.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Include Param</longLabel>
+                   <shortLabel>Include Param</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/formParameter.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Include Request Params</longLabel>
+                   <shortLabel>Include Request Params</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/xsql.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Include XSQL</longLabel>
+                   <shortLabel>Include XSQL</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/table.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Query</longLabel>
+                   <shortLabel>Query</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/parameter.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Insert Param</longLabel>
+                   <shortLabel>Insert Param</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/add16.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Insert Request</longLabel>
+                   <shortLabel>Insert Request</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/update.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Update Request</longLabel>
+                   <shortLabel>Update Request</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/delete.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Delete Request</longLabel>
+                   <shortLabel>Delete Request</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/plsql_func.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Ref Cursor Function</longLabel>
+                   <shortLabel>Ref Cursor Function</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/data-page.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Set Cookie</longLabel>
+                   <shortLabel>Set Cookie</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/filenode.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Set Page Param</longLabel>
+                   <shortLabel>Set Page Param</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/database.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Set Session Param</longLabel>
+                   <shortLabel>Set Session Param</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/styledText.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Set Stylesheet Param</longLabel>
+                   <shortLabel>Set Stylesheet Param</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/viewObject.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>ViewObject Show</longLabel>
+                   <shortLabel>ViewObject Show</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/viewObject.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>ViewObject Update</longLabel>
+                   <shortLabel>ViewObject Update</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+                <item>
+                   <canRemove>true</canRemove>
+                   <editor>oracle.jbo.dt.ui.wizards.xsqlpalette.XsqlWizardInvoker</editor>
+                   <icon>/oracle/jbo/dt/ui/wizards/palette/xsqlimages/xml.png</icon>
+                   <info>xsql</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>Include XML</longLabel>
+                   <shortLabel>Include XML</shortLabel>
+                   <technologyScope>XSQL</technologyScope>
+                   <type>XsqlTag</type>
+                </item>
+             </page>
+             <page>
+                <name>ADF Swing Regions</name>
+                <showForTypes>java</showForTypes>
+                <technologyScope>Java</technologyScope>
+                <type>java</type>
+                <view>list</view>
+                <canRemove>false</canRemove>
+                <canShow>true</canShow>
+                <draggable>true</draggable>
+                <item>
+                   <canRemove>true</canRemove>
+                   <icon>/oracle/ide/resource/images/javanode.png</icon>
+                   <info>dummy</info>
+                   <isPersistent>true</isPersistent>
+                   <longLabel>dummy</longLabel>
+                   <shortLabel>dummy</shortLabel>
+                   <type>JavaBean</type>
+                </item>
+             </page>
+         </palette>
+      </jdeveloper-hook>
+      <libraries xmlns="http://xmlns.oracle.com/jdeveloper/1013/jdev-libraries">
+         <library name="ADF Common Runtime">
+            <classpath>../../BC4J/lib/adfshare.jar</classpath>
+            <srcpath>../../BC4J/src/adfsharesrc.zip</srcpath>
+            <docpath>../doc/ohj/adfsharejavadoc.jar</docpath>
+         </library>
+         <library name="ADF Web Runtime">
+            <classpath>../../BC4J/lib/adfmweb.jar</classpath>
+            <srcpath>../../BC4J/src/adfwebsrc.zip</srcpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+         </library>
+         <library name="BC4J Runtime">
+            <classpath>../../BC4J/lib/adfshare.jar</classpath>
+            <classpath>../../BC4J/lib/bc4jmt.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <classpath>../../BC4J/lib/bc4jct.jar</classpath>
+            <classpath>../../lib/xmlparserv2.jar</classpath>
+            <classpath>../../jlib/jdev-cm.jar</classpath>
+            <classpath>../../jlib/ojmisc.jar</classpath>
+            <classpath>../../jlib/commons-el.jar</classpath>
+            <classpath>../../jlib/jsp-el-api.jar</classpath>
+            <classpath>../../jlib/oracle-el.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <docpath>../doc/ohj/adfsharejavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/bc4jsrc.zip</srcpath>
+         </library>
+         <library name="BC4J Oracle Domains">
+            <classpath>../../BC4J/lib/bc4jdomorcl.jar</classpath>
+            <classpath>../../BC4J/jlib/bc4jdatum.jar</classpath>
+            <docpath>../doc/ohj/bc4jdomorcldoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jdomorcl-src.zip</srcpath>
+         </library>
+         <library name="BC4J Generic Domains">
+            <classpath>../../BC4J/jlib/bc4jdomgnrc.jar</classpath>
+            <docpath>../doc/ohj/bc4jdomgnrcdoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jdomgnrc-src.zip</srcpath>
+         </library>
+         <library name="Oracle8i Lite">
+            <classpath>../../orant/lite/classes/olite40.jar</classpath>
+         </library>
+         <library name="BC4J HTML" deployed="true">
+            <classpath>../../BC4J/jlib/bc4jhtml.jar</classpath>
+            <classpath>../../BC4J/jlib/datatags.jar</classpath>
+            <classpath>../../BC4J/jlib/bc4juixtags.jar</classpath>
+            <classpath>../../BC4J/jlib/graphtags.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jhtmlsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="ADF Model Runtime">
+            <classpath>../../BC4J/lib/adfshare.jar</classpath>
+            <classpath>../../BC4J/lib/adfm.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <classpath>../../BC4J/jlib/adfui.jar</classpath>
+            <classpath>../../BC4J/lib/adfbinding.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <docpath>../doc/ohj/adfsharejavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="ADF Designtime API">
+            <classpath>../../jdev/extensions/oracle.BC4J.10.1.3.jar</classpath>
+            <classpath>../../adfdt/lib/adfdt_common.jar</classpath>
+            <classpath>../../adfdt/lib/adfdt_jdev.jar</classpath>
+            <classpath>../../adfdt/lib/adfdt_mds.jar</classpath>
+            <docpath>../doc/ohj/adfmdtjavadoc.jar</docpath>
+         </library>
+         <library name="ADF Model Generic Runtime">
+            <classpath>../../BC4J/jlib/adfmtl.jar</classpath>
+            <classpath>../../BC4J/lib/adfm.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="ADF Toplink Runtime">
+            <classpath>../../BC4J/jlib/adfmtl.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="ADF EJB Runtime">
+            <classpath>../../BC4J/jlib/adfmejb.jar</classpath>
+         </library>
+         <library name="BC4J Tester">
+            <classpath>../../BC4J/jlib/bc4jtester.jar</classpath>
+            <classpath>../../jlib/jdev-cm.jar</classpath>
+            <classpath>../../lib/xmlparserv2.jar</classpath>
+            <classpath>../../jlib/help4.jar</classpath>
+            <classpath>../../jlib/share.jar</classpath>
+            <classpath>../../jlib/jewt4.jar</classpath>
+            <classpath>../../jlib/oracle_ice.jar</classpath>
+            <classpath>../../jlib/ojmisc.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jtestersrc.zip</srcpath>
+            <srcpath>../src/jewt-src.zip</srcpath>
+         </library>
+         <library name="Oracle Intermedia">
+            <classpath>../../BC4J/lib/bc4jimdomains.jar</classpath>
+            <classpath>../../ord/jlib/ordim.jar</classpath>
+            <classpath>../../ord/jlib/ordhttp.jar</classpath>
+            <docpath>../doc/ohj/bc4jim-doc.jar</docpath>
+         </library>
+         <library name="Oracle Intermedia ADF Swing">
+            <classpath>../../BC4J/lib/bc4jimdomains.jar</classpath>
+            <classpath>../../BC4J/jlib/bc4jimjui.jar</classpath>
+            <classpath>../../ord/jlib/ordim.jar</classpath>
+            <classpath>../../ord/jlib/ordhttp.jar</classpath>
+            <classpath>../../ord/jlib/jmf.jar</classpath>
+            <docpath>../doc/ohj/bc4jim-doc.jar</docpath>
+         </library>
+         <library name="Java Media Framework">
+            <classpath>../../ord/jlib/jmf.jar</classpath>
+         </library>
+         <library name="BC4J EJB Runtime">
+            <classpath>../../BC4J/lib/bc4jmtejb.jar</classpath>
+            <classpath>../../j2ee/home/lib/ejb.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/bc4jaddinsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="BC4J EJB Client">
+            <classpath>../../BC4J/lib/bc4jct.jar</classpath>
+            <classpath>../../BC4J/lib/bc4jctejb.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <classpath>../../j2ee/home/lib/ejb.jar</classpath>
+            <classpath>../../jlib/jdev-cm.jar</classpath>
+            <classpath>../../lib/xmlparserv2.jar</classpath>
+            <classpath>../../jlib/ojmisc.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/bc4jaddinsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="BC4J Oracle9iAS Client">
+            <classpath>../../BC4J/lib/bc4jct.jar</classpath>
+            <classpath>../../BC4J/lib/bc4jctejb.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <classpath>../../j2ee/home/lib/ejb.jar</classpath>
+            <classpath>../../j2ee/home/lib/jta.jar</classpath>
+            <classpath>../../j2ee/home/oc4jclient.jar</classpath>
+            <classpath>../../j2ee/home/lib/jms.jar</classpath>
+            <classpath>../../j2ee/home/lib/connector.jar</classpath>
+            <classpath>../../jlib/jdev-cm.jar</classpath>
+            <classpath>../../lib/xmlparserv2.jar</classpath>
+            <classpath>../../jlib/ojmisc.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/bc4jaddinsrc.zip</srcpath>
+         </library>
+         <library name="ADF Swing Runtime">
+            <classpath>../../BC4J/lib/adfm.jar</classpath>
+            <classpath>../../BC4J/jlib/bc4jui.jar</classpath>
+            <classpath>../../jlib/bigraphbean.jar</classpath>
+            <classpath>../../jlib/LW_PfjBean.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/bc4jaddinsrc.zip</srcpath>
+            <srcpath>../../BC4J/src/adfmsrc.zip</srcpath>
+         </library>
+         <library name="Chart">
+            <classpath>../../jlib/LW_PfjBean.jar</classpath>
+         </library>
+         <library name="BC4J Struts Runtime" deployed="true">
+            <classpath>../../BC4J/jlib/bc4jstruts.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jstrutssrc.zip</srcpath>
+         </library>
+         <library name="Oracle BI Graph" deployed="true">
+            <classpath>../../jlib/bigraphbean.jar</classpath>
+            <classpath>../../jlib/bigraphbean-nls.zip</classpath>
+         </library>
+         <library name="BC4J Security">
+            <classpath>../../j2ee/home/jazn.jar</classpath>
+            <classpath>../../j2ee/home/jazncore.jar</classpath>
+            <classpath>../../BC4J/lib/adfshare.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <classpath>../../lib/xmlparserv2.jar</classpath>
+         </library>
+         <library name="BC4J Client">
+            <classpath>../../BC4J/lib/bc4jct.jar</classpath>
+            <classpath>../../BC4J/lib/collections.jar</classpath>
+            <classpath>../../jlib/jdev-cm.jar</classpath>
+            <docpath>../doc/ohj/bc4jjavadoc.jar</docpath>
+            <srcpath>../../BC4J/src/bc4jsrc.zip</srcpath>
+         </library>
+         <library name="ADF Controller Runtime" deployed="true">
+            <classpath>../../adfc/lib/adf-controller.jar</classpath>
+            <docpath>../doc/ohj/adf_javadocs.jar</docpath>
+            <docpath>../doc/ohj/adfv2_javadocs.jar</docpath>
+            <srcpath>../../adfc/src/adf-controllersrc.zip</srcpath>
+         </library>
+         <library name="JSR-227 API" deployed="true">
+            <classpath>../../BC4J/lib/adfbinding.jar</classpath>
+            <srcpath>../../BC4J/src/adfmsrc.jar</srcpath>
+            <docpath>../doc/ohj/adfmjavadoc.jar</docpath>
+         </library>
+         <library name="Java Cache" deployed="true">
+            <classpath>../../javacache/lib/cache.jar</classpath>
+         </library>
+      </libraries>
+      <!-- CDS add adf tag library -->
+      <jsplibraries xmlns="http://xmlns.oracle.com/jdeveloper/1013/jsp-hook">
+        <jsplibrary>
+          <tldURL>@oracle.home@/BC4J/jlib/adftags.jar!/META-INF/taglib.tld</tldURL>
+          <URI>http://xmlns.oracle.com/adf/ui/jsp/adftags</URI>
+          <displayName>Oracle ADF DataTag library</displayName>
+          <version>1.0</version>
+          <jspVersion>1.2</jspVersion>
+          <prefix>adf</prefix>
+          <metadataAnnotation>/oracle/adf/dt/schema/metadata/ADFTagsMetadata.xml</metadataAnnotation>
+          <runInEditor>false</runInEditor>
+        </jsplibrary>
+        <jsplibrary>
+          <tldURL>@oracle.home@/BC4J/jlib/datatags.jar!/META-INF/taglib.tld</tldURL>
+          <URI>/webapp/DataTags.tld</URI>
+          <displayName>Oracle BC4J DataTag library</displayName>
+          <version>1.0</version>
+          <jspVersion>1.2</jspVersion>
+          <prefix>jbo</prefix>
+          <runInEditor>false</runInEditor>
+        </jsplibrary>
+        <jsplibrary>
+          <tldURL>@oracle.home@/BC4J/jlib/graphtags.jar!/META-INF/taglib.tld</tldURL>
+          <URI>/webapp/graph.tld</URI>
+          <displayName>Graph</displayName>
+          <version>1.0</version>
+          <jspVersion>1.2</jspVersion>
+          <prefix>graph</prefix>
+          <libraries>Oracle BI Graph;Oracle JEWT;BC4J HTML</libraries>
+          <runInEditor>false</runInEditor>
+        </jsplibrary>
+      </jsplibraries>
+      <application-templates-hook xmlns="http://xmlns.oracle.com/jdeveloper/1013/jdev-application-templates">
+        <application-data>
+          <name>Java Application [Swing, ADF BC]</name>
+          <description>This application template is configured for building a data-bound rich client application. It consists of one project for the client (ADF Swing), and another project for the data model (ADF Business Components).</description>
+          <weight>21.0</weight>
+          <projectData>
+            <name>Rich Client View</name>
+            <packageName>view</packageName>
+            <projectName>View.jpr</projectName>
+            <technologyScope>
+              <technologyKey>JClient</technologyKey>
+              <technologyKey>Java</technologyKey>
+            </technologyScope>
+          </projectData>
+          <projectData>
+            <name>Data Model</name>
+            <packageName>model</packageName>
+            <projectName>Model.jpr</projectName>
+            <technologyScope>
+              <technologyKey>ADFbc</technologyKey>
+              <technologyKey>Java</technologyKey>
+            </technologyScope>
+          </projectData>
+        </application-data>
+        <application-data>
+          <name>Web Application [JSP, Struts, ADF BC]</name>
+          <description>This application template is configured for building a data-bound web application. It consists of one project for the view and controller components (JSP and Struts), and another project for the data model (ADF Business Components).</description>
+          <weight>15.0</weight>
+          <projectData>
+            <name>View and Controller</name>
+            <packageName>view</packageName>
+            <projectName>ViewController.jpr</projectName>
+            <technologyScope>
+              <technologyKey>XML</technologyKey>
+              <technologyKey>HTML</technologyKey>
+              <technologyKey>Java</technologyKey>
+              <technologyKey>JSP</technologyKey>
+              <technologyKey>Struts</technologyKey>
+            </technologyScope>
+          </projectData>
+          <projectData>
+            <name>Data Model</name>
+            <packageName>model</packageName>
+            <projectName>Model.jpr</projectName>
+            <technologyScope>
+              <technologyKey>ADFbc</technologyKey>
+              <technologyKey>Java</technologyKey>
+            </technologyScope>
+          </projectData>
+        </application-data>
+        <application-data>
+          <name>Web Application [JSF, ADF BC]</name>
+          <description>This application template is configured for building a data-bound web application. It consists of one project for the view and controller components (JSF), and another project for the data model (ADF Business Components).</description>
+          <weight>13.0</weight>
+          <projectData>
+            <name>View and Controller</name>
+            <packageName>view</packageName>
+            <projectName>ViewController.jpr</projectName>
+            <technologyScope>
+              <technologyKey>XML</technologyKey>
+              <technologyKey>HTML</technologyKey>
+              <technologyKey>Java</technologyKey>
+              <technologyKey>JSF</technologyKey>
+              <technologyKey>JSP</technologyKey>
+            </technologyScope>
+          </projectData>
+          <projectData>
+            <name>Data Model</name>
+            <packageName>model</packageName>
+            <projectName>Model.jpr</projectName>
+            <technologyScope>
+              <technologyKey>ADFbc</technologyKey>
+              <technologyKey>Java</technologyKey>
+            </technologyScope>
+          </projectData>
+        </application-data>
+      </application-templates-hook>
+    <uie:uieditor-hook xmlns:uie="http://xmlns.oracle.com/jdeveloper/1013/jdev-uieditor">
+      <!-- Proxy hook for Jclient JUPanelBinding-->
+       <uie:concreteProxy
+          clsName="oracle.jbo.uicli.jui.JUPanelBinding"
+          proxyCls="oracle.jbo.dt.ui.jui.propertyeditors.dtmodels.DTPanelBinding"
+          proxyPath="../extensions/oracle.BC4J.10.1.3.jar">
+      </uie:concreteProxy>
+       <uie:concreteProxy
+          clsName="oracle.dss.graph.Graph"
+          proxyCls="oracle.jbo.dt.ui.jui.propertyeditors.dtmodels.DTGraphProxy"
+          proxyPath="../extensions/oracle.BC4J.10.1.3.jar">
+      </uie:concreteProxy>
+    </uie:uieditor-hook>
+
+    <feature-hook>
+      <description>Provides support for Data Binding and ADF Business Components</description>
+      <optional>true</optional>
+    </feature-hook>
+   </hooks>
+</extension>
