@@ -5,7 +5,7 @@
 This is a collection of related notes to the goal of using Maven and ADF.
 
 = Deploy ADF jars to maven =
-      Use JarLoader
+      Use [http://code.google.com/p/maven-adf/source/browse/trunk/src/main/java/gov/llnl/JarLoader.java JarLoader]
          Fix ability to use SCP.  Find a FAST way to deploy these! Specifically, handle different user names on each end.
          List missing ones
             adftags.jar
