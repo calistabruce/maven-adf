@@ -35,7 +35,13 @@ public class JarDef {
 		return filename;
 	}
 	public void setFilename(String filename) {
+	  if ("${jdbc.library}".equals(filename)) {
+	    this.filename = "../../../wlserver_10.3/server/lib/ojdbc6.jar";
+	  } else if ("${orai18n.library}".equals(filename)) {
+	    this.filename = "../../../oracle_common/modules/oracle.nlsrtl_11.1.0/orai18n.jar";
+	  } else {
 		this.filename = filename;
+	  }
 	}
 	public int getType() {
 		return type;
