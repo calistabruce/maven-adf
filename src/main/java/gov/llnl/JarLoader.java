@@ -16,18 +16,12 @@ import org.xml.sax.SAXException;
 public class JarLoader {
 	
 	// These need to become command line arguments or properties.  For now, hard coded.
-	private static String JDEV_VERSION = "11.1.1.2.0";
-    private static String JDEV_HOME = "/opt/jdev/jdev-11.1.1.2.0/jdeveloper";
+  private static String JDEV_VERSION = "11.1.1.5.0";
+  private static String JDEV_HOME = "/opt/apps/jdeveloper/jdeveloper-11.1.1.5.0/jdeveloper";
 
 	// For Maven 2
 	private static String REPO_URL = "https://nexus/content/repositories/thirdparty";
 	private static String REPOSITORY_ID = "nexus-thirdparty";
-
-	// For Maven 1 - default is for sqa maven repo
-	private static String REPO_ROOT = "johndoe@maven1-host:/opt/local/maven-siteroot/maven/bc4j/jars";
-	
-	// Copy command for maven 1 - default is scp
-	private static final String COPY_CMD="scp";
 
     // Customize these as you like.  The following values work just fine
     private static String JDEV_GROUP_BASE = "com.oracle.jdeveloper";
@@ -45,31 +39,33 @@ public class JarLoader {
 		if (!scriptsDir.exists()) {
 			scriptsDir.mkdirs();
 		}
-		Collection<JarLibrary> libs = getLibraries(JDEV_HOME + "/jdev/extensions");
+		Collection<JarLibrary> libs = new ArrayList<JarLibrary>();
+		getLibraries(libs, JDEV_HOME);
+		
 		// Generate a list of unique JARs
 		HashMap<JarDef, Integer> jarList = buildJarList(libs);
 		spewJarList(jarList);
 		writeMavenDeployJarsScript(jarList);
 		writeMavenLibraryPoms(libs);
 		writeMavenDeployLibraryPoms(libs);
-		writeLegacyMavenCopyScript(jarList);
+		writeMavenShellScript();
 	}
 
 	private void writeMavenDeployLibraryPoms(Collection<JarLibrary> libs) {
-		FileWriter deployScript = null;
+      File deployScriptFile = new File(SCRIPT_PATH + "/deploy-adf-poms.sh");
+      if (deployScriptFile.exists()) {
+        deployScriptFile.delete();
+      }		
+      FileWriter deployScript = null;
 		try {
-			deployScript = new FileWriter(SCRIPT_PATH + "/deploy-adf-poms.sh");
+			deployScript = new FileWriter(deployScriptFile);
 			deployScript.append("#!/bin/bash\n");
-			deployScript.append("POM_PATH=" + new File(POM_PATH).getAbsolutePath() + "\n");
-			deployScript.append("REPO_URL=" + REPO_URL + "\n");
-			deployScript.append("REPOSITORY_ID=" + REPOSITORY_ID + "\n");
-
+			
+			String pomPath = new File(POM_PATH).getAbsolutePath();
 			for (JarLibrary lib : libs) {
-				deployScript
-						.append(String
-								.format(
-										"mvn deploy:deploy-file -DpomFile=$POM_PATH/%1$s -Dfile=$POM_PATH/%1$s -Dpackaging=pom -DrepositoryId=$REPOSITORY_ID -Durl=$REPO_URL\n",
-										lib.getPomFileName()));
+				deployScript.append(String.format(
+				"mvn deploy:deploy-file -DpomFile=%1$s/%2$s -Dfile=%1$s/%2$s -Dpackaging=pom -DrepositoryId=%3$s -Durl=%4$s\n",
+				pomPath, lib.getPomFileName(), REPOSITORY_ID, REPO_URL));
 			}
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
@@ -131,6 +127,7 @@ public class JarLoader {
 			exists = true;
 		}
 		if (!exists) {
+		    System.err.println("Jar not found: " + new File(JDEV_HOME + "/" + jar.getPathAndFilename()).getAbsolutePath());
 			out.append("<!-- No jar file found, but dependency was found -->\n");
 			out.append("<!--\n");
 		}
@@ -149,26 +146,47 @@ public class JarLoader {
 		out.append("</project>\n");
 	}
 
+	private void writeMavenShellScript() {
+	  File mavenShellScript = new File(SCRIPT_PATH + "/deploy-mvnsh.sh");
+	  if (mavenShellScript.exists()) {
+	    mavenShellScript.delete();
+	  }
+      FileWriter deployScript = null;
+      try {
+          deployScript = new FileWriter(mavenShellScript);
+          deployScript.append("#!/bin/bash\n");
+          deployScript.append("# If you have the \"maven shell\" http://shell.sonatype.org/index.html installed, just run this script, and it will do everything\n\n");
+          deployScript.append("mvnsh source deploy-adf-jars.sh\n");
+          deployScript.append("mvnsh source deploy-adf-poms.sh\n");
+      } catch (IOException e) {
+          System.out.println("Error writing deploy script: " + e.getMessage());
+      } finally {
+          try {
+              deployScript.close();
+          } catch (IOException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+          }
+      }
+	}
+	
 	private void writeMavenDeployJarsScript(HashMap<JarDef, Integer> jarList) {
+	    File deployScriptFile = new File(SCRIPT_PATH + "/deploy-adf-jars.sh");
+	    if (deployScriptFile.exists()) {
+	      deployScriptFile.delete();
+	    }
 		FileWriter deployScript = null;
 		try {
-			deployScript = new FileWriter(SCRIPT_PATH + "/deploy-adf-jars.sh");
+			deployScript = new FileWriter(deployScriptFile);
 			deployScript.append("#!/bin/bash\n");
-			deployScript.append("GROUP_BASE=" + JDEV_GROUP_BASE + ".jars\n");
-			deployScript.append("VERSION=" + JDEV_VERSION + "\n");
-			deployScript.append("JDEV_HOME=" + JDEV_HOME + "\n");
-			deployScript.append("REPO_URL=" + REPO_URL + "\n");
-			deployScript.append("REPOSITORY_ID=" + REPOSITORY_ID + "\n");
 
 			for (JarDef jar : jarList.keySet()) {
 				// To get started, we're skipping the few odd ball jars.
 				if (jar.getFilename().startsWith("../../")) {
 					if (new File(JDEV_HOME + "/" + jar.getPathAndFilename()).exists()) {
-						deployScript
-								.append(String
-										.format(
-												"mvn deploy:deploy-file -DgroupId=$GROUP_BASE.%1$s -DartifactId=%2$s -Dversion=$VERSION -Dfile=$JDEV_HOME/%3$s -Dpackaging=jar -DrepositoryId=$REPOSITORY_ID -Durl=$REPO_URL\n",
-												jar.getGroupId(), jar.getArtifactId(), jar.getPathAndFilename()));
+						deployScript.append(String.format(
+						"mvn deploy:deploy-file -DgroupId=%1$s.jars.%2$s -DartifactId=%3$s -Dversion=%4$s -Dfile=%5$s/%6$s -Dpackaging=jar -DrepositoryId=%7$s -Durl=%8$s\n",
+						JDEV_GROUP_BASE, jar.getGroupId(), jar.getArtifactId(), JDEV_VERSION, JDEV_HOME, jar.getPathAndFilename(), REPOSITORY_ID, REPO_URL));
 					} else {
 						System.out.println("File: " + jar.getPathAndFilename() + " does not exist.");
 					}
@@ -186,37 +204,6 @@ public class JarLoader {
 		}
 	}
 
-	private void writeLegacyMavenCopyScript(HashMap<JarDef, Integer> jarList) {
-		FileWriter deployScript = null;
-		try {
-			deployScript = new FileWriter(SCRIPT_PATH + "/deploy-jars-to-legacy-maven.sh");
-			deployScript.append("#!/bin/bash\n");
-			deployScript.append("VERSION=" + JDEV_VERSION + "\n");
-			deployScript.append("JDEV_HOME=" + JDEV_HOME + "\n");
-			deployScript.append("REPO_ROOT=" + REPO_ROOT + "\n");
-			deployScript.append("COPY_CMD="+COPY_CMD +"\n");
-
-			for (JarDef jar : jarList.keySet()) {
-				// To get started, we're skipping the few odd ball jars.
-				if (jar.getFilename().startsWith("../../")) {
-					deployScript
-							.append(String
-									.format(
-											"$COPY_CMD $JDEV_HOME/%1$s $REPO_ROOT/%2$s-$VERSION.jar\n",
-											jar.getPathAndFilename(),jar.getArtifactId()));
-				}
-			}
-		} catch (IOException e) {
-			System.out.println("Error writing deploy script: " + e.getMessage());
-		} finally {
-			try {
-				deployScript.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 
 	private HashMap<JarDef, Integer> buildJarList(Collection<JarLibrary> libs) {
 		HashMap<JarDef, Integer> jars = new HashMap<JarDef, Integer>(50);
@@ -242,35 +229,40 @@ public class JarLoader {
 		}
 	}
 
-	public Collection<JarLibrary> getLibraries(String path) {
-
-		ArrayList<JarLibrary> libs = new ArrayList<JarLibrary>();
+	public void getLibraries(Collection<JarLibrary> libs, String path) {
 
 		File searchRoot = new File(path);
 		if (!searchRoot.exists()) {
 		  System.err.println("Directory does not exist: " + path);
 		} else {
     		File[] allFiles = searchRoot.listFiles();
-    		for (int i = 0; i < allFiles.length; i++) {
-    			File file = allFiles[i];
-    			if (file.getName().endsWith("jar")) {
-    				System.out.println("Processing: " + file.getName());
-    				JarFile jarfile;
-    				try {
-    					jarfile = new JarFile(file);
-    					Digester digester = new Digester();
-    					addRules(digester);
-    					digester.push(libs);
-    					getJDevExtensionXml(jarfile, digester);
-    				} catch (IOException e) {
-    					// TODO Auto-generated catch block
-    					System.out.println("Not really a jar: " + file.getName());
-    					System.out.println(e.getMessage());
-    				}
-    			}
+    		if (allFiles == null) {
+    		  throw new NullPointerException("Permissions problem accessing: " + searchRoot.getAbsolutePath());
+    		} else {
+        		for (int i = 0; i < allFiles.length; i++) {
+        			File file = allFiles[i];
+        			if (file.isDirectory()) {
+        			  getLibraries(libs, file.getAbsolutePath());
+        			} else {
+            			if (file.getName().endsWith("jar")) {
+            				System.out.println("Processing: " + file.getName());
+            				JarFile jarfile;
+            				try {
+            					jarfile = new JarFile(file);
+            					Digester digester = new Digester();
+            					addRules(digester);
+            					digester.push(libs);
+            					getJDevExtensionXml(jarfile, digester);
+            				} catch (IOException e) {
+            					// TODO Auto-generated catch block
+            					System.out.println("Not really a jar: " + file.getName());
+            					System.out.println(e.getMessage());
+            				}
+            			}
+        			}
+        		}
     		}
 		}
-		return libs;
 	}
 
 	public JarLibrary getJDevExtensionXml(JarFile jarfile, Digester digester) {
@@ -297,11 +289,15 @@ public class JarLoader {
 
 	private void addRules(Digester d) {
 		// d.addBeanPropertySetter("extension/hooks/libraries");
-		d.addObjectCreate("extension/hooks/libraries/library", JarLibrary.class);
-		d.addSetProperties("extension/hooks/libraries/library");
-		d.addCallMethod("extension/hooks/libraries/library/classpath", "addJarFile", 0);
-		d.addCallMethod("extension/hooks/libraries/library/srcpath", "addSrcFile", 0);
-		d.addCallMethod("extension/hooks/libraries/library/docpath", "addDocFile", 0);
-		d.addSetNext("extension/hooks/libraries/library", "add");
+
+      d.addObjectCreate("*/libraries/library", JarLibrary.class);
+      d.addSetProperties("*/libraries/library");
+      d.addCallMethod("*/libraries/library/classpath", "addJarFile", 0);
+      d.addCallMethod("*/libraries/library/srcpath", "addSrcFile", 0);
+      d.addCallMethod("*/libraries/library/docpath", "addDocFile", 0);
+      d.addSetNext("*/libraries/library", "add");
+
 	}
+	
+	
 }
