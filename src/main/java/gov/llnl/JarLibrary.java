@@ -13,7 +13,7 @@ public class JarLibrary {
     /* Used to convert JDeveloper library names to something Maven and the shel environment can easily handle.
      * Only problems so far have been spaces and parentheses. 
      */
-    private static final String INVALID_CHARS = "[ ()]";
+    private static final String INVALID_CHARS = "[ ()/]";
     private static final Pattern INVALID_CHARS_PATTERN = Pattern.compile(INVALID_CHARS);
 
 	
