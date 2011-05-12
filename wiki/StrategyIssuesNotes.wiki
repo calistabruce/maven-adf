@@ -4,6 +4,14 @@
 
 This is a collection of related notes to the goal of using Maven and ADF.
 
+= 5/11/2011 Notes =
+  * Committed fixes to better detect "Oracle JDBC" library.  
+  * Added support for Maven Shell http://shell.sonatype.org/ for deployment using a single command execution.
+  * Verified on 10.1.3.4.0, 10.1.3.5.0, 11.1.1.3.0, 11.1.1.4.0, 11.1.1.5.0 
+
+= Usage = 
+  
+
 = Deploy ADF jars to maven =
       Use [http://code.google.com/p/maven-adf/source/browse/trunk/src/main/java/gov/llnl/JarLoader.java JarLoader]
          Fix ability to use SCP.  Find a FAST way to deploy these! Specifically, handle different user names on each end.
