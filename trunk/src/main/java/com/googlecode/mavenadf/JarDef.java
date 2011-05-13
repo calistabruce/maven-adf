@@ -1,4 +1,4 @@
-package gov.llnl;
+package com.googlecode.mavenadf;
 
 /*
  * JarDef represents a jar definition as extracted from Jdeveloper Library definitions.

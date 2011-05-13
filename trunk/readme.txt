@@ -10,14 +10,11 @@ This has been in use successfully since JDeveloper 10.1.3.
 
 HOWTO:
 
-1) Edit the JarLoader.java file to change the constants to match your environment:
-  private static String JDEV_VERSION = "11.1.1.2.0";
-  private static String JDEV_HOME = "/opt/jdev/jdev-11.1.1.2.0/jdeveloper";
-  private static String REPO_URL = "https://your.nexus.repo/content/repositories/thirdparty";
-  private static String REPOSITORY_ID = "nexus-thirdparty";
+1) Edit sample.properties to match your environment
   
-2) Run this command to generate the scripts:
-$ mvn clean compile exec:java
+2) Run this command to generate the scripts (assuming you have maven shell installed):
+$ mvn exec:java -Dexec.args="-config sample.properties"
+$ target/scripts/deploy-mvnsh.sh
   
 3) Make sure your ~/.m2/settings.xml is configured with a repository id matching the REPOSITORY_ID in step 1.
 (we use maven encrypted passwords to store the nexus repository password: http://maven.apache.org/guides/mini/guide-encryption.html )
@@ -31,8 +28,7 @@ $ mvn clean compile exec:java
 
 4) Run the generated shell scripts to populate your maven repository
 $ cd target/scripts
-$ ./deploy-adf-jars.sh
-$ ./deploy-adf-poms.sh
+$ ./deploy-mvnsh.sh
 
 5) Now you can add jdev library references to your projects.  We use the trinidad jdev plugin to generate .jpr files.  
 So, here's an example pom fragment showing the use of one of the generated library poms.  Notice that we have converted 
