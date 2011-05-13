@@ -1,4 +1,4 @@
-package gov.llnl;
+package com.googlecode.mavenadf;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -26,7 +26,9 @@ public class JarLibrary {
 	}
 	
 	public void addFile(JarDef jarDef) {
-		System.out.println("  "+getName()+": Adding: "+jarDef.toString());
+    if (JarLoader.isVerbose()) {
+  		System.out.println("  "+getName()+": Adding: "+jarDef.toString());
+    }
 		getJars().add(jarDef);
 	}
 	
