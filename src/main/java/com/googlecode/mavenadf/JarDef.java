@@ -1,5 +1,9 @@
 package com.googlecode.mavenadf;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.jar.Attributes;
+
 /*
  * JarDef represents a jar definition as extracted from Jdeveloper Library definitions.
  * 
@@ -19,14 +23,19 @@ package com.googlecode.mavenadf;
  */
 public class JarDef {
 	
+    private JarLibrary library;
 	private String  filename;
 	private int type;
+	private Attributes manifestAttributes;
+	private boolean exists = false;
 	
 	public static int JAR=0;
 	public static int SRC=1;
 	public static int DOC=2;
+	public static int MANIFEST=3;
 	
-	public JarDef(String path, int type) {
+	public JarDef(JarLibrary library, String path, int type) {
+	    this.setLibrary(library);
 		this.setFilename(path);
 		this.setType(type);
 	}
@@ -34,14 +43,43 @@ public class JarDef {
 	public String getFilename() {
 		return filename;
 	}
-	public void setFilename(String filename) {
-	  if ("${jdbc.library}".equals(filename)) {
+	public void setFilename(String newfilename) {
+	  boolean override = false;
+	  if ("${jdbc.library}".equals(newfilename)) {
 	    this.filename = "../../../wlserver_10.3/server/lib/ojdbc6.jar";
-	  } else if ("${orai18n.library}".equals(filename)) {
+	    override = true;
+	  } else if ("${orai18n.library}".equals(newfilename)) {
 	    this.filename = "../../../oracle_common/modules/oracle.nlsrtl_11.1.0/orai18n.jar";
+	    override = true;
+	  } else if (newfilename.contains("${ide.extension.install.home}")) {
+		    String path = JarLoader.getCurrentFile().getAbsolutePath();
+		    path = path.substring(0, path.lastIndexOf('.'));
+		    path = path.replace(library.getProps().get("jdevhome"), ".");
+		    this.filename = newfilename.replace("${ide.extension.install.home}", path); 
+		    override = true;
+	  } else if (newfilename.startsWith("./")) {
+		  this.filename = newfilename.substring(2);
 	  } else {
-		this.filename = filename;
+		this.filename = newfilename;
 	  }
+	  
+	  File file = new File(getPathAndFilename());
+	  if (!file.exists()) {
+		file = new File(JarLoader.props.get(JarLoader.JDEVHOME) + "/" + getPathAndFilename());
+	  }
+		if (file.exists() && file.isFile()) {
+			setExists(true);
+			try {
+				this.filename = file.getCanonicalPath();
+			} catch (IOException e) {
+				System.err.println("Cannot find canonical path of: " + file.getPath());
+			}
+			if (override && JarLoader.isVerbose()) {
+				System.out.println("Overriding symbolic " + newfilename + " with: " + this.filename);	    
+			}
+		}
+
+	  
 	}
 	public int getType() {
 		return type;
@@ -55,25 +93,53 @@ public class JarDef {
 	}
 	
 	public String getPathAndFilename() {
-		return getFilename().substring(6);
+		if (getFilename().startsWith("../..")) {
+			return getFilename().substring(6);
+		} else {
+			return getFilename();
+		}
 	}
 	
-	public String getGroupId() {
-		String[] paths = getFilename().split("/");
-		// TODO Make this more generic.
-		String groupId = paths[2];
-		for (int i = 3; i < paths.length -1; i++) {
-			groupId += "."+paths[i];
+	public String getGroupId() throws IOException {
+		String path = getFilename();
+		String middlewarehome = new File(JarLoader.props.get(JarLoader.JDEVHOME) + "/..").getCanonicalPath();
+		if (path.contains(middlewarehome)) {
+			path = path.substring(middlewarehome.length()+1);
+		}
+		String[] paths = path.split("/");
+		String groupId = null;
+		if (paths.length >= 1) {
+			groupId = paths[0];
+			for (int i = 1; i < paths.length -1; i++) {
+				groupId += "."+paths[i].replace('.', '_');
+			}
+		} else {
+			groupId = paths[0];
 		}
 		// Convert any dots to underscores
-		groupId=groupId.replace('.', '_');
+		while(groupId.charAt(0) == '.') {
+		  groupId = groupId.substring(1, groupId.length());
+		}
+		if (groupId.endsWith(".jar")) {
+			groupId = groupId.substring(0, groupId.length()-4);
+		}
+        while (groupId.contains("__")) {
+        	groupId = groupId.replace("__", "_");
+        }
+        if (groupId.endsWith("_")) {
+        	groupId = groupId.substring(0, groupId.length()-1);
+        }
 		return groupId;
 	}
 	
 	public String getArtifactId() {
 		int lastSlash = getFilename().lastIndexOf('/')+1;
 		int lastDot = getFilename().lastIndexOf(".");
-		return getFilename().substring(lastSlash,lastDot);
+		try {
+			return getFilename().substring(lastSlash,lastDot);
+		} catch (StringIndexOutOfBoundsException e) {
+			return getFilename();
+		}
 	}
 	
 	@Override
@@ -100,5 +166,29 @@ public class JarDef {
 			return false;
 		return true;
 	}
+
+  public JarLibrary getLibrary() {
+    return library;
+  }
+
+  public void setLibrary(JarLibrary library) {
+    this.library = library;
+  }
+
+public boolean exists() {
+	return exists;
+}
+
+public void setExists(boolean exists) {
+	this.exists = exists;
+}
+
+public Attributes getManifestAttributes() {
+	return manifestAttributes;
+}
+
+public void setManifestAttributes(Attributes manifestAttributes) {
+	this.manifestAttributes = manifestAttributes;
+}
 
 }
