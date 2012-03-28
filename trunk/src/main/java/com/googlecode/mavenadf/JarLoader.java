@@ -6,11 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeSet;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -25,9 +28,11 @@ import org.xml.sax.SAXException;
 
 public class JarLoader {
 	
+  public static final String JDEVHOME = "jdevhome";
+  public static final String USEMANIFESTCLASSPATHS = "usemanifestclasspaths";
+  
   private static final String HELP = "help";
   private static final String VERSION = "version";
-  private static final String JDEVHOME = "jdevhome";
   private static final String REPOURL = "repourl";
   private static final String REPOID = "repoid";
   private static final String GROUPBASE = "groupbase";
@@ -38,8 +43,15 @@ public class JarLoader {
   public static final String DEFAULT_GROUPBASE = "com.oracle.jdeveloper";
   private static final String DEFAULT_SCRIPTPATH = "target/scripts";
   
-  private Map<String, String> props = new HashMap<String, String>();
+  public static Map<String, String> props = new HashMap<String, String>();
   private static boolean verbose = false;
+  
+  private static File currentFile = null;
+  
+  private List<JarLibrary> libs = null;
+  
+  private String id = null;
+  private String version = null;
 	
 	public static void main(String[] args) {
 		JarLoader loader = new JarLoader();
@@ -50,6 +62,7 @@ public class JarLoader {
 		  loader.processAll();
 		}
 	  System.out.println("Finished: " + new Date().toString());
+	  System.out.println("Now run either run the 'deploy-mvnsh' maven shell script or the 'deploy-adf-jars' and 'deploy-adf-poms' scripts generated in: " + new File(props.get(SCRIPTPATH)).getAbsolutePath() + " to populate your maven repository.");
 	}
 	
 	public boolean parseCommandLine(String[] args)  {
@@ -64,6 +77,7 @@ public class JarLoader {
 	  options.addOption(GROUPBASE, true, "groupId base");
 	  options.addOption(SCRIPTPATH, true, "Script Path for scripts to be written");
 	  options.addOption(CONFIG, true, "Config File path");
+	  options.addOption(USEMANIFESTCLASSPATHS, true, "Generate dependencies for manifest classpaths found");
 	  
 	  try {
 	    CommandLine cmd = parser.parse(options, args);
@@ -107,6 +121,7 @@ public class JarLoader {
 	      props.put(REPOID, cmd.getOptionValue(REPOID, null));
 	      props.put(GROUPBASE, cmd.getOptionValue(GROUPBASE, DEFAULT_GROUPBASE));
 	      props.put(SCRIPTPATH, cmd.getOptionValue(SCRIPTPATH, DEFAULT_SCRIPTPATH));
+	      props.put(USEMANIFESTCLASSPATHS, cmd.getOptionValue(USEMANIFESTCLASSPATHS, "false"));
 	    }
 	    return validateProperties(options);
 	  } catch (ParseException e) {
@@ -146,25 +161,38 @@ public class JarLoader {
       formatter.printHelp("mavenadf", options);
 	}
 
+	private List<JarLibrary> getJarLibs() {
+		if (libs == null) {
+			libs = new ArrayList<JarLibrary>();
+		}
+		return libs;
+	}
+	
+	public void addLibrary(JarLibrary lib) {
+		getJarLibs().add(lib);
+		lib.setLibraryFile(getCurrentFile());
+		lib.setExtensionVersion(getVersion());
+		lib.setExtensionId(getId());
+	}
+	
 	public void processAll() {
 	  
 		File scriptsDir = new File(props.get(SCRIPTPATH));
 		if (!scriptsDir.exists()) {
 			scriptsDir.mkdirs();
 		}
-		Collection<JarLibrary> libs = new ArrayList<JarLibrary>();
-		getLibraries(libs, props.get(JDEVHOME));
+		getLibraries(props.get(JDEVHOME));
 		
 		// Generate a list of unique JARs
-		HashMap<JarDef, Integer> jarList = buildJarList(libs);
-		spewJarList(jarList);
+		HashMap<JarDef, Integer> jarList = buildJarList(getJarLibs());
+		// spewJarList(jarList);
 		writeMavenDeployJarsScript(jarList);
-		writeMavenLibraryPoms(libs);
-		writeMavenDeployLibraryPoms(libs);
+		writeMavenLibraryPoms(getJarLibs());
+		writeMavenDeployLibraryPoms(getJarLibs());
 		writeMavenShellScript();
 	}
 
-	private void writeMavenDeployLibraryPoms(Collection<JarLibrary> libs) {
+	private void writeMavenDeployLibraryPoms(List<JarLibrary> libs) {
       File deployScriptFile = new File(props.get(SCRIPTPATH) + File.separator + "deploy-adf-poms.sh");
       if (deployScriptFile.exists()) {
         deployScriptFile.delete();
@@ -175,7 +203,16 @@ public class JarLoader {
 			deployScript.append("#!/bin/bash\n");
 			
 			String pomPath = new File(getPomPath()).getAbsolutePath();
-			for (JarLibrary lib : libs) {
+			
+			TreeSet<JarLibrary> sortedLibraries = new TreeSet<JarLibrary>(new Comparator<JarLibrary>() {
+				public int compare(JarLibrary o1, JarLibrary o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+
+			sortedLibraries.addAll(libs);
+			
+			for (JarLibrary lib : sortedLibraries) {
 				deployScript.append(String.format(
 				"mvn deploy:deploy-file -DpomFile=%1$s/%2$s -Dfile=%1$s/%2$s -Dpackaging=pom -DrepositoryId=%3$s -Durl=%4$s\n",
 				pomPath, lib.getPomFileName(), props.get(REPOID), props.get(REPOURL)));
@@ -187,13 +224,12 @@ public class JarLoader {
 				deployScript.flush();
 				deployScript.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	private void writeMavenLibraryPoms(Collection<JarLibrary> libs) {
+	private void writeMavenLibraryPoms(List<JarLibrary> libs) {
 		File pomDir = new File(getPomPath());
 		if (!pomDir.exists()) {
 			pomDir.mkdirs();
@@ -207,8 +243,12 @@ public class JarLoader {
 				}
 				writePomBegin(lib, out);
 				for (JarDef jar : lib.getJars()) {
-					if (jar.getType() == JarDef.JAR && jar.getFilename().startsWith("../../")) {
+					if ((jar.getType() == JarDef.JAR || jar.getType() == JarDef.MANIFEST)) {
 						writeJarDep(lib, jar, out);
+					} else {
+						if (isVerbose()) {
+							System.out.println("Lib: " + lib.getName() + " Skipping: " + jar.getFilename());
+						}
 					}
 				}
 				writePomEnd(lib, out);
@@ -220,7 +260,6 @@ public class JarLoader {
 					out.flush();
 					out.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -228,31 +267,82 @@ public class JarLoader {
 	}
 
 	private void writePomBegin(JarLibrary lib, FileWriter out) throws IOException {
+		String libPath = lib.getLibraryFile().getCanonicalPath().substring(props.get(JDEVHOME).length()+1);
 		out.append("<project>\n");
 		out.append("  <modelVersion>4.0.0</modelVersion>\n");
 		out.append("  <groupId>" + props.get(GROUPBASE) + ".library</groupId>\n");
 		out.append("  <artifactId>" + lib.getArtifactId() + "</artifactId>\n");
+		String deployedByDefault = lib.getDeployed();
+		if (deployedByDefault == null) {
+			deployedByDefault = "false";
+		}
+		out.append("  <!-- JDeveloper library name: '" + lib.getName() + "' -->\n"); 
+		out.append("  <!-- Deployed by default: " + deployedByDefault + "-->\n");
 		out.append("  <version>" + props.get(VERSION) + "</version>\n");
+		out.append("  <!-- This library pom was generated from ${JDEVHOME}/" + libPath + "!META-INF/extension.xml -->\n");
+		out.append("  <!-- Extension ID: '" + lib.getExtensionId() + "' -->\n");
+		out.append("  <!-- Extension Version: '" +  lib.getExtensionVersion() + "' -->\n");
 		out.append("  <dependencies>\n");
 	}
 
 	private void writeJarDep(JarLibrary lib, JarDef jar, FileWriter out) throws IOException {
 		boolean exists = false;
-		if (new File(props.get(JDEVHOME) + File.separator + jar.getPathAndFilename()).exists()) {
+		if (new File(jar.getFilename()).exists()) {
 			exists = true;
 		}
-		if (!exists) {
-		    System.err.println("Jar not found for library " + lib.getName() + ": " + new File(props.get(JDEVHOME) + File.separator + jar.getPathAndFilename()).getAbsolutePath());
-			out.append("<!-- No jar file found, but dependency was found -->\n");
-			out.append("<!--\n");
+		if (exists) {
+			out.append("    <dependency>\n");
+			if (jar.getType() == JarDef.MANIFEST) {
+				out.append("      <!-- This dependency is from a MANIFEST classpath reference -->\n");
+			}
+			out.append("      <groupId>" + props.get(GROUPBASE) + ".jars." + jar.getGroupId() + "</groupId>\n");
+			out.append("      <artifactId>" + jar.getArtifactId() + "</artifactId>\n");
+			out.append("      <version>" + props.get(VERSION) + "</version>\n");
+			
+			writeManifestAttributes(jar, out);
+
+			out.append("    </dependency>\n");
+		} else {
+			if (isVerbose()) {
+				System.err.println("Jar not found for library " + lib.getName() + ": " + jar.getFilename());
+			}
+			if (jar.getType() == JarDef.MANIFEST) {
+				out.append("    <!-- No jar file found, but dependency was found for " + jar.getArtifactId() + " -->\n");
+				out.append("    <!--   This dependency is from a MANIFEST classpath reference -->\n");
+			} else {
+				out.append("    <!-- No jar file found, but dependency was found for " + jar.getArtifactId() + " -->\n");
+			}
+			out.append("    <!--\n");
+			out.append("    <dependency>\n");
+			out.append("      <groupId>" + props.get(GROUPBASE) + ".jars." + jar.getGroupId() + "</groupId>\n");
+			out.append("      <artifactId>" + jar.getArtifactId() + "</artifactId>\n");
+			out.append("      <version>" + props.get(VERSION) + "</version>\n");
+			out.append("    </dependency>\n");
+			out.append("    -->\n");
 		}
-		out.append("    <dependency>\n");
-		out.append("      <groupId>" + props.get(GROUPBASE) + ".jars." + jar.getGroupId() + "</groupId>\n");
-		out.append("      <artifactId>" + jar.getArtifactId() + "</artifactId>\n");
-		out.append("      <version>" + props.get(VERSION) + "</version>\n");
-		out.append("    </dependency>\n");
-		if (!exists) {
-			out.append("-->\n");
+	}
+
+	private void writeManifestAttributes(JarDef jar, FileWriter out)
+			throws IOException {
+		Attributes manifestAttributes = jar.getManifestAttributes();
+		
+		if (manifestAttributes != null) {
+
+			TreeSet<Object> sortedAttributes = new TreeSet<Object>(new Comparator<Object>() {
+				
+				public int compare(Object o1, Object o2) {
+					return o1.toString().compareTo(o2.toString());
+				}
+			});
+			sortedAttributes.addAll(manifestAttributes.keySet());
+
+			out.append("      <!-- Manifest Info: -->\n");
+			for (Object key : sortedAttributes) {
+				String value = manifestAttributes.get(key).toString();
+				if (key.toString() != null && value != null && !"".equals(value.trim())) {
+					out.append("      <!--   "+ key.toString() + "=" + value + " -->\n");
+				}
+			}
 		}
 	}
 
@@ -279,7 +369,6 @@ public class JarLoader {
           try {
               deployScript.close();
           } catch (IOException e) {
-              // TODO Auto-generated catch block
               e.printStackTrace();
           }
       }
@@ -295,23 +384,24 @@ public class JarLoader {
 			deployScript = new FileWriter(deployScriptFile);
 			deployScript.append("#!/bin/bash\n");
 
-			for (JarDef jar : jarList.keySet()) {
-				// To get started, we're skipping the few odd ball jars.
-				if (jar.getFilename().startsWith("../../")) {
-					if (new File(props.get(JDEVHOME) + "/" + jar.getPathAndFilename()).exists()) {
-						deployScript.append(String.format(
-						"mvn deploy:deploy-file -DgroupId=%1$s.jars.%2$s -DartifactId=%3$s -Dversion=%4$s -Dfile=%5$s/%6$s -Dpackaging=jar -DrepositoryId=%7$s -Durl=%8$s\n",
-						props.get(GROUPBASE), jar.getGroupId(), jar.getArtifactId(), props.get(VERSION), props.get(JDEVHOME), jar.getPathAndFilename(), props.get(REPOID), props.get(REPOURL)));
-					} else {
-            if (isVerbose()) {
-  						System.err.println("Jar not found: " + props.get(JDEVHOME) + File.separator + jar.getPathAndFilename());
-            }
-					}
-        } else {
-          if (isVerbose()) {
-            System.out.println("Skipping jar: " + props.get(JDEVHOME) + "/" + jar.getPathAndFilename());
-          }
-        }
+			TreeSet<JarDef> sortedJars = new TreeSet<JarDef>(new Comparator<JarDef>() {
+				
+				public int compare(JarDef o1, JarDef o2) {
+					return o1.getFilename().compareTo(o2.getFilename());
+				}
+			});
+			sortedJars.addAll(jarList.keySet());
+			
+			for (JarDef jar : sortedJars) {
+				if (new File(jar.getFilename()).exists()) {
+					deployScript.append(String.format(
+					"mvn deploy:deploy-file -DgroupId=%1$s.jars.%2$s -DartifactId=%3$s -Dversion=%4$s -Dfile=%5$s -Dpackaging=jar -DrepositoryId=%6$s -Durl=%7$s\n",
+					props.get(GROUPBASE), jar.getGroupId(), jar.getArtifactId(), props.get(VERSION), jar.getFilename(), props.get(REPOID), props.get(REPOURL)));
+				} else {
+		            if (isVerbose()) {
+		            	System.err.println("Jar not found: " + jar.getFilename());
+		            }
+				}
 			}
 		} catch (IOException e) {
 			System.err.println("Error writing deploy script: " + e.getMessage());
@@ -319,14 +409,13 @@ public class JarLoader {
 			try {
 				deployScript.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
 
-	private HashMap<JarDef, Integer> buildJarList(Collection<JarLibrary> libs) {
+	private HashMap<JarDef, Integer> buildJarList(List<JarLibrary> libs) {
 		HashMap<JarDef, Integer> jars = new HashMap<JarDef, Integer>(50);
 		for (JarLibrary lib : libs) {
 			Integer count;
@@ -336,7 +425,7 @@ public class JarLoader {
 				} else {
 					count = new Integer(1);
 				}
-				if (jar.getType() == JarDef.JAR) {
+				if (jar.getType() == JarDef.JAR || jar.getType() == JarDef.MANIFEST) {
 					jars.put(jar, count);
 				}
 			}
@@ -352,7 +441,7 @@ public class JarLoader {
 	  }
 	}
 
-	public void getLibraries(Collection<JarLibrary> libs, String path) {
+	public void getLibraries(String path) {
 
 		File searchRoot = new File(path);
 		if (!searchRoot.exists()) {
@@ -365,16 +454,13 @@ public class JarLoader {
         		for (int i = 0; i < allFiles.length; i++) {
         			File file = allFiles[i];
         			if (file.isDirectory()) {
-        			  getLibraries(libs, file.getAbsolutePath());
+        			  getLibraries(file.getAbsolutePath());
         			} else {
             			if (file.getName().endsWith("jar")) {
                			  if (isVerbose()) {
-               				System.out.println("Processing: " + file.getName());
+               				System.out.println("Processing: " + file.getAbsolutePath());
                			  }
-          					Digester digester = new Digester();
-          					addRules(digester);
-          					digester.push(libs);
-          					getJDevExtensionXml(file, digester);
+          					getJDevExtensionXml(file);
             				
             			}
         			}
@@ -383,8 +469,9 @@ public class JarLoader {
 		}
 	}
 
-	public void getJDevExtensionXml(File file, Digester digester) {
+	public void getJDevExtensionXml(File file) {
 	    JarFile jarfile = null;
+	    setCurrentFile(file);
 	    try {
 	      jarfile = new JarFile(file);
 	    } catch (IOException e) {
@@ -401,33 +488,75 @@ public class JarLoader {
 		} else {
 			InputStream is;
 			try {
+				setId(null);
+				setVersion(null);
 				is = jarfile.getInputStream(jarEntry);
+                Digester digester = new Digester();
+                addRules(digester);
+                digester.push(this);
 				digester.parse(is);
-				is = jarfile.getInputStream(jarEntry);
-				// debugThing(is);
+				is.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return;
 	}
 
+/* <extension id="oracle.adf.share.dt" version="11.1.1.5.37.60.13"
+           esdk-version="1.0" rsbundle-class="oracle.adf.share.dt.res.Bundle"
+           xmlns="http://jcp.org/jsr/198/extension-manifest">
+ 		...
+         <library name="JPS Designtime">
+            <classpath>../../../oracle_common/modules/oracle.jps_11.1.1/jps-ee.jar</classpath>
+         </library>
+         ...
+*/
+	  
+	
 	private void addRules(Digester d) {
-		// d.addBeanPropertySetter("extension/hooks/libraries");
-
+	  //d.addBeanPropertySetter("extension/hooks/libraries");
+		
+		
+	  d.addSetProperties("*/extension", "id", "id");
+	  d.addSetProperties("*/extension", "version", "version");
+	  d.addSetProperties("*/ex:extension", "id", "id");
+	  d.addSetProperties("*/ex:extension", "version", "version");
       d.addObjectCreate("*/libraries/library", JarLibrary.class);
       d.addSetProperties("*/libraries/library");
       d.addCallMethod("*/libraries/library/classpath", "addJarFile", 0);
       d.addCallMethod("*/libraries/library/srcpath", "addSrcFile", 0);
       d.addCallMethod("*/libraries/library/docpath", "addDocFile", 0);
-      d.addSetNext("*/libraries/library", "add");
+      d.addSetNext("*/libraries/library", "addLibrary");
 
 	}
 
+  public void setId(String id) {
+	  this.id = id;
+  }
+  
+  public String getId() {
+	  return this.id;
+  }
+  
+  public void setVersion(String version) {
+	  this.version = version;
+  }
+  
+  public String getVersion() {
+	  return this.version;
+  }
+  
+  public static File getCurrentFile() {
+	  return currentFile;
+  }
+  
+  public static void setCurrentFile(File file) {
+	  currentFile = file;
+  }
+	
   public static void setVerbose(boolean vb) {
     verbose = vb;
   }

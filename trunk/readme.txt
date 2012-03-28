@@ -4,8 +4,6 @@ This utility is a quick and dirty implementation for extracting JARs and their d
 
 The strategy is to generate pom.xml files and scripts that deploy pom's and JARs to a Maven repository.
 
-(There is some code in here to generate library poms for maven 1, but we don't use it anymore.  It's left in for reference in case someone needs it.)
-
 This has been in use successfully since JDeveloper 10.1.3.
 
 HOWTO:
@@ -13,8 +11,7 @@ HOWTO:
 1) Edit sample.properties to match your environment
   
 2) Run this command to generate the scripts (assuming you have maven shell installed):
-$ mvn exec:java -Dexec.args="-config sample.properties"
-$ target/scripts/deploy-mvnsh.sh
+$ mvn clean package exec:java -Dexec.args="-config sample.properties"
   
 3) Make sure your ~/.m2/settings.xml is configured with a repository id matching the REPOSITORY_ID in step 1.
 (we use maven encrypted passwords to store the nexus repository password: http://maven.apache.org/guides/mini/guide-encryption.html )
@@ -36,7 +33,7 @@ weird characters (like space, /, $, etc) to _ characters in the library poms gen
 
     .....
     <properties>
-      <jdev.release>11.1.1.2.0</jdev.release>
+      <jdev.release>11.1.1.5.0</jdev.release>
     </properties>
     .....
     <plugins>
