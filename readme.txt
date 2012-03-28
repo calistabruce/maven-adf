@@ -12,6 +12,9 @@ HOWTO:
   
 2) Run this command to generate the scripts (assuming you have maven shell installed):
 $ mvn clean package exec:java -Dexec.args="-config sample.properties"
+OR..  for verbose output:
+$ mvn clean package exec:java -Dexec.args="-config sample.properties -verbose"
+
   
 3) Make sure your ~/.m2/settings.xml is configured with a repository id matching the REPOSITORY_ID in step 1.
 (we use maven encrypted passwords to store the nexus repository password: http://maven.apache.org/guides/mini/guide-encryption.html )
