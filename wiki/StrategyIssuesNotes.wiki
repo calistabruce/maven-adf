@@ -4,6 +4,12 @@
 
 This is a collection of related notes to the goal of using Maven and ADF.
 
+= 4/7/2012 Notes =
+  * Added support to follow MANIFEST.MF Class-Path jar references.  For jars that have a manifest classpath, maven-adf will try to discover the jars and add them as dependencies to libraries.  This behavior is configurable via the usemanifestclasspaths configuration property.
+  * Added comments to the generated pom files to help with explaining where the pom and associated dependencies came from in the jdeveloper installation
+  * Fixed up the groupId string values to be more comprehensible.  The groupId should match the location in the jdeveloper install where the jdeveloper extension was discovered.
+  * Verified on 10.1.3.5.0, 11.1.1.3.0, 11.1.1.4.0, 11.1.1.5.0, 11.1.1.6.0, 11.1.2.0.0, 11.1.2.1.0
+
 = 5/11/2011 Notes =
   * Committed fixes to better detect "Oracle JDBC" library.  
   * Added support for Maven Shell http://shell.sonatype.org/ for deployment using a single command execution.
