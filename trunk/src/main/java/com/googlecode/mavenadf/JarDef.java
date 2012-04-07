@@ -57,7 +57,7 @@ public class JarDef {
 		    path = path.replace(library.getProps().get("jdevhome"), ".");
 		    this.filename = newfilename.replace("${ide.extension.install.home}", path); 
 		    override = true;
-	  } else if (newfilename.startsWith("./")) {
+	  } else if (newfilename.startsWith("./") || newfilename.startsWith(".\\")) {
 		  this.filename = newfilename.substring(2);
 	  } else {
 		this.filename = newfilename;
@@ -65,7 +65,7 @@ public class JarDef {
 	  
 	  File file = new File(getPathAndFilename());
 	  if (!file.exists()) {
-		file = new File(JarLoader.props.get(JarLoader.JDEVHOME) + "/" + getPathAndFilename());
+		file = new File(JarLoader.props.get(JarLoader.JDEVHOME) + File.separator + getPathAndFilename());
 	  }
 		if (file.exists() && file.isFile()) {
 			setExists(true);
@@ -93,7 +93,7 @@ public class JarDef {
 	}
 	
 	public String getPathAndFilename() {
-		if (getFilename().startsWith("../..")) {
+		if (getFilename().startsWith("../..") || getFilename().startsWith("..\\..")) {
 			return getFilename().substring(6);
 		} else {
 			return getFilename();
@@ -102,11 +102,11 @@ public class JarDef {
 	
 	public String getGroupId() throws IOException {
 		String path = getFilename();
-		String middlewarehome = new File(JarLoader.props.get(JarLoader.JDEVHOME) + "/..").getCanonicalPath();
+		String middlewarehome = new File(JarLoader.props.get(JarLoader.JDEVHOME) + File.separator + "..").getCanonicalPath();
 		if (path.contains(middlewarehome)) {
 			path = path.substring(middlewarehome.length()+1);
 		}
-		String[] paths = path.split("/");
+		String[] paths = path.split(File.separator);
 		String groupId = null;
 		if (paths.length >= 1) {
 			groupId = paths[0];
@@ -133,7 +133,7 @@ public class JarDef {
 	}
 	
 	public String getArtifactId() {
-		int lastSlash = getFilename().lastIndexOf('/')+1;
+		int lastSlash = getFilename().lastIndexOf(File.separator)+1;
 		int lastDot = getFilename().lastIndexOf(".");
 		try {
 			return getFilename().substring(lastSlash,lastDot);
