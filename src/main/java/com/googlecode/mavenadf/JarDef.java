@@ -68,6 +68,9 @@ public class JarDef {
     if (!file.exists()) {
       file = new File(JarLoader.props.get(JarLoader.JDEVHOME) + "/" + getPathAndFilename());
     }
+    if (!file.exists()) {
+      file = new File(JarLoader.props.get(JarLoader.JDEVHOME)+ "/../" + getPathAndFilename());
+    }
     if (file.exists() && file.isFile()) {
       setExists(true);
       try {
