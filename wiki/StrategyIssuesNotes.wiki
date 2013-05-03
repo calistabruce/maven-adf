@@ -4,6 +4,10 @@
 
 This is a collection of related notes to the goal of using Maven and ADF.
 
+= 5/3/2013 Notes =
+ * Added recording of MD5, SHA1 and Filename information in the generated comments in the library pom.xml files.  Makes it easier to find the "same" artifact in the maven central repo for comparison purposes.
+ * Verified on 11.1.1.7.0, 11.1.2.3.0, 11.1.2.4.0
+
 = 4/7/2012 Notes =
   * Added support to follow MANIFEST.MF Class-Path jar references.  For jars that have a manifest classpath, maven-adf will try to discover the jars and add them as dependencies to libraries.  This behavior is configurable via the usemanifestclasspaths configuration property.
   * Added comments to the generated pom files to help with explaining where the pom and associated dependencies came from in the jdeveloper installation
